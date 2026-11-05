@@ -16,10 +16,7 @@ import kr.toxicity.hud.api.bukkit.nms.NMS
 import kr.toxicity.hud.api.bukkit.nms.NMSVersion
 import kr.toxicity.hud.api.component.WidthComponent
 import kr.toxicity.hud.api.player.HudPlayer
-import kr.toxicity.hud.nms.v26_R2.entity.CraftEntityView
-import kr.toxicity.hud.nms.v26_R2.entity.CraftLivingEntityView
 import kr.toxicity.hud.nms.v26_R2.entity.createAdaptedFieldGetter
-import kr.toxicity.hud.nms.v26_R2.entity.unsafeHandle
 import net.kyori.adventure.bossbar.BossBar
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.pointer.Pointers
@@ -66,6 +63,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.function.Consumer
 
 class NMSImpl : NMS {
+    override fun getFoliaAdaptedEntity(entity: Entity): Entity = entity
+    override fun getFoliaAdaptedPlayer(player: Player): Player = player
+
     companion object {
         private const val INJECT_NAME = BetterHud.DEFAULT_NAMESPACE
         private val bossBarMap = ConcurrentHashMap<UUID, PlayerBossBar>()
@@ -143,108 +143,10 @@ class NMSImpl : NMS {
         }, bootstrap as Plugin)
     }
 
-    override fun getFoliaAdaptedEntity(entity: Entity): Entity {
-        return when (entity) {
-            is Player -> getFoliaAdaptedPlayer(entity)
-            is CraftLivingEntity -> CraftLivingEntityView(entity)
-            else -> CraftEntityView(entity as CraftEntity)
-        }
-    }
+
 
     @Suppress("UnstableApiUsage")
-    override fun getFoliaAdaptedPlayer(player: Player): Player {
-        val craftPlayer = player as CraftPlayer
-        return object : CraftPlayer(Bukkit.getServer() as CraftServer, craftPlayer.unsafeHandle as ServerPlayer) {
-            override fun getPersistentDataContainer(): CraftPersistentDataContainer {
-                return player.persistentDataContainer
-            }
-            override fun getHandle(): ServerPlayer {
-                return craftPlayer.unsafeHandle as ServerPlayer
-            }
-            override fun dropItem(dropAll: Boolean): Boolean {
-                return player.dropItem(dropAll)
-            }
-            override fun dropItem(p0: Int, p1: Int, p2: Boolean, p3: Consumer<Item>?): Item? {
-                return player.dropItem(p0, p1, p2, p3)
-            }
-            override fun dropItem(p0: EquipmentSlot, p1: Int, p2: Boolean, p3: Consumer<Item>?): Item? {
-                return player.dropItem(p0, p1, p2, p3)
-            }
-            override fun dropItem(p0: ItemStack, p1: Boolean, p2: Consumer<Item>?): Item? {
-                return player.dropItem(p0, p1, p2)
-            }
-            override fun getHealth(): Double {
-                return player.health
-            }
-            override fun getScaledHealth(): Float {
-                return player.scaledHealth
-            }
-            override fun getHealthScale(): Double {
-                return player.healthScale
-            }
-            override fun getUniqueId(): UUID = player.uniqueId
-            override fun getFirstPlayed(): Long {
-                return player.firstPlayed
-            }
-            override fun getInventory(): PlayerInventory {
-                return player.inventory
-            }
-            override fun getEnderChest(): Inventory {
-                return player.enderChest
-            }
-            override fun getCooldown(key: Key): Int {
-                return player.getCooldown(key)
-            }
-            override fun setCooldown(key: Key, i: Int) {
-                player.setCooldown(key, i)
-            }
-            override fun isOp(): Boolean {
-                return player.isOp
-            }
-            override fun getGameMode(): GameMode {
-                return player.gameMode
-            }
-            override fun getEquipment(): EntityEquipment {
-                return player.equipment
-            }
-            override fun hasPermission(name: String): Boolean {
-                return player.hasPermission(name)
-            }
-            override fun hasPermission(perm: Permission): Boolean {
-                return player.hasPermission(perm)
-            }
-            override fun isPermissionSet(name: String): Boolean {
-                return player.isPermissionSet(name)
-            }
-            override fun isPermissionSet(perm: Permission): Boolean = player.isPermissionSet(perm)
-            override fun hasPlayedBefore(): Boolean = player.hasPlayedBefore()
-            override fun getLastDeathLocation(): Location? = player.lastDeathLocation
-            override fun getLocation(): Location = player.location
-            override fun getName(): String = player.name
-            override fun isOnGround(): Boolean = player.isOnGround
-            override fun getLastDamageCause(): EntityDamageEvent? = player.lastDamageCause
-            override fun getWorldBorder(): WorldBorder? = player.worldBorder
-            override fun pointers(): Pointers = player.pointers()
-            override fun spigot(): Player.Spigot = player.spigot()
 
-            override fun showBossBar(bar: BossBar) {
-                player.showBossBar(bar)
-            }
-            override fun hideBossBar(bar: BossBar) {
-                player.hideBossBar(bar)
-            }
-            override fun sendMessage(message: String) {
-                player.sendMessage(message)
-            }
-
-            override fun <T : Any> getData(p0: DataComponentType.Valued<T>): T? = player.getData(p0)
-            override fun <T : Any> getDataOrDefault(
-                p0: DataComponentType.Valued<out T>,
-                p1: T?
-            ): T? = player.getDataOrDefault(p0, p1)
-            override fun hasData(p0: DataComponentType): Boolean = player.hasData(p0)
-        }
-    }
 
 
     private class CachedHudBossbar(val hud: HudBossBar, val cacheUUID: UUID, val buf: HudByteBuf)

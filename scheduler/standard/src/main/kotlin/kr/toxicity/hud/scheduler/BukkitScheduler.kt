@@ -20,6 +20,8 @@ class BukkitScheduler(
         }
     }
 
+    override fun taskTimer(delay: Long, period: Long, runnable: Runnable): HudTask = Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period).wrap()
+
     override fun task(runnable: Runnable): HudTask = Bukkit.getScheduler().runTask(plugin, runnable).wrap()
     override fun task(location: LocationWrapper, runnable: Runnable): HudTask = task(runnable)
     override fun taskLater(delay: Long, runnable: Runnable): HudTask = Bukkit.getScheduler().runTaskLater(plugin, runnable, delay).wrap()

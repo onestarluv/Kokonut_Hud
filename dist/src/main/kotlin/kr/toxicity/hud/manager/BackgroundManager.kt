@@ -27,36 +27,6 @@ object BackgroundManager : BetterHudManager {
     }
 
     override fun reload(workingDirectory: File, info: ReloadInfo, resource: GlobalResource) {
-        val folder = workingDirectory.subFolder("backgrounds")
-        folder.forEach {
-            if (it.extension == "yml") {
-                runCatching {
-                    val yaml = it.toYaml()
-                    val name = it.nameWithoutExtension
-                    val backgroundFolder = folder.subFolder(name)
-                    fun getImage(imageName: String) = File(backgroundFolder, "$imageName.png")
-                        .ifNotExist { "this image doesn't exist: $imageName.png in $name" }
-                        .toImage()
-                        .removeEmptyWidth()
-                        .ifNull { "this image is empty: $imageName.png in $name" }.apply {
-                            PackGenerator.addTask(resource.textures + "${"background_${name}_$imageName".encodeKey(EncodeManager.EncodeNamespace.TEXTURES)}.png") {
-                                image.toByteArray()
-                            }
-                        }
-                    backgroundMap.putSync("background") {
-                        HudBackground(
-                            name,
-                            getImage("left"),
-                            getImage("right"),
-                            getImage("body"),
-                            PixelLocation(yaml)
-                        )
-                    }
-                }.handleFailure(info) {
-                    "Unable to load this yml: ${it.name}"
-                }
-            }
-        }
     }
 
     override fun end() {

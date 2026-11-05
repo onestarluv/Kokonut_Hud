@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
  * Represents the adapted scheduler between Paper and Folia.
  */
 public interface HudScheduler {
+    /** Repeats on the Paper server thread; required for Bukkit state reads. */
+    @NotNull HudTask taskTimer(long delay, long period, @NotNull Runnable runnable);
     /**
      * Executes sync task.
      * @param runnable task

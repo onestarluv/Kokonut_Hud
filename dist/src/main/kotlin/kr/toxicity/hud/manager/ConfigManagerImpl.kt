@@ -36,8 +36,6 @@ object ConfigManagerImpl : BetterHudManager, ConfigManager {
         private set
     var defaultCompass = emptyList<String>()
         private set
-    var versionCheck = true
-        private set
 
     var numberFormat = DecimalFormat("#,###.#")
         private set
@@ -118,9 +116,6 @@ object ConfigManagerImpl : BetterHudManager, ConfigManager {
 
     override fun preReload() {
         runCatching {
-            File(DATA_FOLDER, "version.txt").bufferedWriter().use {
-                it.write(BOOTSTRAP.version())
-            }
             val yaml = PluginConfiguration.CONFIG.create()
             debug = yaml.getAsBoolean("debug", false)
             autoSaveTime = yaml.getAsLong("auto-save-time", 300) * 20
@@ -169,7 +164,6 @@ object ConfigManagerImpl : BetterHudManager, ConfigManager {
             if (bossbarResourcePackLine != newLine) {
                 bossbarResourcePackLine = newLine
             }
-            versionCheck = yaml.getAsBoolean("version-check", false)
             enableProtection = yaml.getAsBoolean("enable-protection", false)
             mergeBossBar = yaml.getAsBoolean("merge-boss-bar", true)
             enableSelfHost = yaml.getAsBoolean("enable-self-host", false)
@@ -182,11 +176,6 @@ object ConfigManagerImpl : BetterHudManager, ConfigManager {
             selfHostPort = yaml.getAsInt("self-host-port", 8163)
             forceUpdate = yaml.getAsBoolean("force-update", false)
             resourcePackObfuscation = yaml.getAsBoolean("resourcepack-obfuscation", false)
-            if (yaml.getAsBoolean("metrics", false)) {
-                BOOTSTRAP.startMetrics()
-            } else {
-                BOOTSTRAP.endMetrics()
-            }
             yaml["loading-head"]?.asString()?.let {
                 loadingHead = it
             }

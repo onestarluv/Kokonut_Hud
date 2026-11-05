@@ -63,18 +63,10 @@ fun YamlObject.getAsAnimationType(key: String, sender: BetterCommandSource = BOO
 
 
 fun File.forEachAllYaml(sender: BetterCommandSource, block: (File, String, YamlObject) -> Unit) {
-    forEachAllFolder {
-        if (it.extension == "yml") {
-            runCatching {
-                it.toYaml().forEach { e ->
-                    val v = e.value
-                    if (v is YamlObject) block(it, e.key, v)
-                }
-            }.handleFailure(sender) {
-                "Unable to load this yml file: ${it.name}"
-            }
-        } else {
-            sender.warn("This is not a yml file: ${it.path}")
+    PLUGIN.loadAssets("default/$name") { path, stream ->
+        if (path.endsWith(".yml") && !path.substringAfterLast('/').startsWith('-')) stream.toYaml().forEach { entry ->
+            val value = entry.value
+            if (value is YamlObject) block(File(this, path), entry.key, value)
         }
     }
 }

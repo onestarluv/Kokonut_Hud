@@ -42,9 +42,6 @@ class HudPlayerBukkit(
         )
     }
 
-    override fun updatePlaceholder() {
-        (BOOTSTRAP as BukkitBootstrapImpl).update(this)
-    }
 
     override fun reload() {
         initBossBar {

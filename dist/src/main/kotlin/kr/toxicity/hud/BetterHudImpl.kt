@@ -2,13 +2,11 @@ package kr.toxicity.hud
 
 import kr.toxicity.hud.api.BetterHud
 import kr.toxicity.hud.api.BetterHudBootstrap
-import kr.toxicity.hud.api.BetterHudDependency
 import kr.toxicity.hud.api.manager.*
 import kr.toxicity.hud.api.plugin.ReloadInfo
 import kr.toxicity.hud.api.plugin.ReloadState
 import kr.toxicity.hud.api.plugin.ReloadState.Failure
 import kr.toxicity.hud.api.plugin.ReloadState.Success
-import kr.toxicity.hud.dependency.DependencyInjector
 import kr.toxicity.hud.manager.*
 import kr.toxicity.hud.pack.PackGenerator
 import kr.toxicity.hud.pack.PackUploader
@@ -30,14 +28,11 @@ import java.util.zip.ZipEntry
 class BetterHudImpl(val bootstrap: BetterHudBootstrap) : BetterHud {
 
     init {
-        if (!bootstrap.dataFolder().exists() && !bootstrap.isVelocity) loadAssets("default", bootstrap.dataFolder().apply {
-            mkdir()
-        })
-        val injector = DependencyInjector(bootstrap.version(), bootstrap.dataFolder(), bootstrap.logger(), bootstrap.classloader())
-        BetterHudDependency.dependencies().forEach {
-            if (it.availablePlatforms.any { p ->
-                p.match(bootstrap)
-            }) injector.load(it)
+        bootstrap.dataFolder().mkdirs()
+        loadAssets("default") { name, stream ->
+            if (!name.endsWith(".yml")) {
+                File(bootstrap.dataFolder(), name).apply { parentFile.mkdirs() }.outputStream().use { stream.copyTo(it) }
+            }
         }
     }
 
@@ -106,15 +101,6 @@ class BetterHudImpl(val bootstrap: BetterHudBootstrap) : BetterHud {
                 it.preReload()
             }
             val resource = GlobalResource(info)
-            DATA_FOLDER.subFolder("packs").forEach { pack ->
-                if (!pack.isDirectory || pack.name.startsWith('-')) return@forEach
-                managers.filter {
-                    it.supportExternalPacks
-                }.forEach {
-                    debug(ConfigManager.DebugLevel.MANAGER, "Reloading ${it.managerName} in ${pack.name}...")
-                    it.reload(pack, info, resource)
-                }
-            }
             managers.forEach {
                 debug(ConfigManager.DebugLevel.MANAGER, "Reloading ${it.managerName}...")
                 it.reload(DATA_FOLDER, info, resource)

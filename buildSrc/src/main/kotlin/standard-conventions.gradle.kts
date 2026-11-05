@@ -25,7 +25,6 @@ tasks {
 
 java {
     disableAutoTargetJvm()
-    toolchain.vendor = JvmVendorSpec.ADOPTIUM
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
 }
 

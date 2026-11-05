@@ -9,5 +9,5 @@ dependencies {
 
     testImplementation(libs.bundles.library)
 
-    compileOnly("me.lucko:jar-relocator:1.7")
 }
+sourceSets.test { resources.srcDir(rootProject.file("common-resources")) }

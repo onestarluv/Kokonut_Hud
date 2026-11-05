@@ -34,17 +34,12 @@ abstract class HudPlayerImpl : HudPlayer {
 
     private val task = HudPlayerTask {
         val speed = ConfigManagerImpl.tickSpeed
-        if (speed > 0) asyncTaskTimer(1, speed) {
+        if (speed > 0) BOOTSTRAP.scheduler().taskTimer(1, speed) {
             update()
         } else null
     }
-    private val autoSave = HudPlayerTask {
-        asyncTaskTimer(ConfigManagerImpl.autoSaveTime, ConfigManagerImpl.autoSaveTime) {
-            save()
-        }
-    }
     private val locationProvide = HudPlayerTask {
-        asyncTaskTimer(ConfigManagerImpl.locationProvideTime, ConfigManagerImpl.locationProvideTime) {
+        BOOTSTRAP.scheduler().taskTimer(ConfigManagerImpl.locationProvideTime, ConfigManagerImpl.locationProvideTime) {
             PlayerManagerImpl.provideLocation(this)
         }
     }
@@ -95,12 +90,10 @@ abstract class HudPlayerImpl : HudPlayer {
         if (!current.isClosed) current.save(this)
     }
 
-    protected abstract fun updatePlaceholder()
 
     @Synchronized
     final override fun update() {
-        updatePlaceholder()
-        tick++
+        tick += ConfigManagerImpl.tickSpeed.coerceAtLeast(1)
         val compList = ArrayList<WidthComponent>()
 
         if (enabled && !PLUGIN.isOnReload) {
@@ -141,7 +134,6 @@ abstract class HudPlayerImpl : HudPlayer {
     }
 
     override fun reload() {
-        autoSave.restart()
         locationProvide.restart()
         startTick()
         val popupNames = popups.toNonDefaultNames()
@@ -165,7 +157,6 @@ abstract class HudPlayerImpl : HudPlayer {
         }
         VOLATILE_CODE.removeBossBar(this)
         cancelTick()
-        autoSave.cancel()
         locationProvide.cancel()
     }
 

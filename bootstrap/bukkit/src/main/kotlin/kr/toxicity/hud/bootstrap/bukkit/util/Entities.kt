@@ -12,11 +12,5 @@ import org.bukkit.plugin.Plugin
 val LivingEntity.maximumHealth
     get() = getAttribute(Attribute.MAX_HEALTH)!!.value
 
-const val ENTITY_ADAPTER_KEY = "betterhud_entity_adapter"
-
 inline val <reified T : Entity> T.adapt
-    get() = if (BOOTSTRAP.isFolia) getMetadata(ENTITY_ADAPTER_KEY).firstNotNullOfOrNull {
-        it as? T
-    } ?: (VOLATILE_CODE as NMS).getFoliaAdaptedEntity(this).also {
-        setMetadata(ENTITY_ADAPTER_KEY, FixedMetadataValue(BOOTSTRAP as Plugin, it))
-    } else this
+    get() = this

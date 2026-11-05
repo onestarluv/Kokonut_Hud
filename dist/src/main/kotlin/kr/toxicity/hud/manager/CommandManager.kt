@@ -30,14 +30,7 @@ object CommandManager : BetterHudManager {
     override val managerName: String = "Command"
     override val supportExternalPacks: Boolean = false
 
-    val library = BetterCommand(DATA_FOLDER.subFolder("lang").apply {
-        PLUGIN.loadAssets("lang") { name, stream ->
-            val file = File(this, name)
-            if (!file.exists()) file.outputStream().buffered().use {
-                stream.copyTo(it)
-            }
-        }
-    }, MiniMessage.miniMessage(), BOOTSTRAP.logger())
+    val library = BetterCommand(DATA_FOLDER.subFolder("lang"), MiniMessage.miniMessage(), BOOTSTRAP.logger())
         .exceptionHandler {
             if (ConfigManagerImpl.debug()) {
                 warn(
@@ -549,7 +542,7 @@ object CommandManager : BetterHudManager {
     }
 
     override fun reload(workingDirectory: File, info: ReloadInfo, resource: GlobalResource) {
-        library.reload()
+        // Messages use the registered built-in defaults.
     }
 
     override fun end() {
