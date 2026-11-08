@@ -1,7 +1,8 @@
-# 실버 · 골드 · 코코넛을 한 줄로 표시합니다.
-# 현재 배경 이미지는 122x20이며 원본 크기로 표시합니다.
-# 항목 간격은 이미지 폭 122px + 여백 8px = 130px입니다.
-# 숫자는 아이콘 오른쪽 24px부터, 12px 글꼴(16 * 0.75)로 표시합니다.
+# 실버 · 골드 · 코코넛 칩을 화면 왼쪽 위에 한 줄로 표시합니다.
+# 칩은 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 실버 128x20(조 단위 9,999,999,999,999.99까지),
+# 골드·코코넛 56x20(9,999까지). 칩 사이 여백 4px: 실버 0, 골드 132, 코코넛 192.
+# 숫자는 아이콘 칸(16px)과 구분선 뒤 x+22부터, 8px 글꼴(16 * 0.5)로 칩 안 세로 가운데(y 6)에 그립니다.
+# 글자색은 CoreUi 메뉴 본문과 같은 #3B2A1A, 그림자 없음.
 currency_bar:
   offset: left # 화면 왼쪽 위의 기존 기준점을 유지합니다.
   images:
@@ -12,12 +13,12 @@ currency_bar:
       scale: 1.0
     2:
       name: currency_gold
-      x: 130
+      x: 132
       y: 0
       scale: 1.0
     3:
       name: currency_kokonut
-      x: 260
+      x: 192
       y: 0
       scale: 1.0
   texts:
@@ -26,11 +27,11 @@ currency_bar:
       pattern: "[currency_silver]"
       placeholder-string-format:
         number: "#,##0.##"
-      x: 24
-      y: 4
-      scale: 0.75
-      color: "#303030"
-      outline: "80000000" # 반투명 검정 그림자(ARGB)
+      x: 22
+      y: 6
+      scale: 0.5
+      color: "#3B2A1A"
+      outline: false
       align: left
     2:
       name: currency_font
@@ -38,19 +39,19 @@ currency_bar:
       placeholder-string-format:
         number: "#,###"
       x: 154
-      y: 4
-      scale: 0.75
-      color: "#303030"
-      outline: "80000000"
+      y: 6
+      scale: 0.5
+      color: "#3B2A1A"
+      outline: false
       align: left
     3:
       name: currency_font
       pattern: "[currency_kokonut]"
       placeholder-string-format:
         number: "#,###"
-      x: 284
-      y: 4
-      scale: 0.75
-      color: "#303030"
-      outline: "80000000"
+      x: 214
+      y: 6
+      scale: 0.5
+      color: "#3B2A1A"
+      outline: false
       align: left

@@ -30,6 +30,22 @@ class EmbeddedDefaultsTest {
         for (entry in (layout["texts"] as Map<*, *>).values) assertTrue((entry as Map<*, *>)["name"] in fonts)
     }
 
+    @Test fun currencyChipsKeepPixelArtSharp() {
+        // Pixel art only stays even at whole-number scales; the chips are drawn at their final size (20 px tall).
+        // Silver balances run large, gold and kokonut stay within thousands, so silver gets the widest chip.
+        val images = yaml("default/images/default-image.yml")
+        val layout = yaml("default/layouts/default-layout.yml")["currency_bar"] as Map<*, *>
+        val widths = mutableMapOf<String, Int>()
+        for (entry in (layout["images"] as Map<*, *>).values.map { it as Map<*, *> }) {
+            assertEquals(1.0, (entry["scale"] as? Number)?.toDouble() ?: 1.0, "chip scale")
+            val file = (images[entry["name"]] as Map<*, *>)["file"]
+            val bitmap = javaClass.getResourceAsStream("/default/assets/$file")!!.use { ImageIO.read(it) }
+            assertEquals(20, bitmap.height)
+            widths[entry["name"].toString()] = bitmap.width
+        }
+        assertEquals(128, widths["currency_silver"]); assertEquals(56, widths["currency_gold"]); assertEquals(56, widths["currency_kokonut"])
+    }
+
     @Test fun currencyImagesDoNotOverlapAndBalancesMatchTheirIcons() {
         val images = yaml("default/images/default-image.yml")
         val layout = yaml("default/layouts/default-layout.yml")["currency_bar"] as Map<*, *>
