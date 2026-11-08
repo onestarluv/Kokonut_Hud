@@ -1,45 +1,56 @@
-health:
+# 실버 · 골드 · 코코넛을 한 줄로 표시합니다.
+# 현재 배경 이미지는 122x20이며 원본 크기로 표시합니다.
+# 항목 간격은 이미지 폭 122px + 여백 8px = 130px입니다.
+# 숫자는 아이콘 오른쪽 24px부터, 12px 글꼴(16 * 0.75)로 표시합니다.
+currency_bar:
+  offset: left # 화면 왼쪽 위의 기존 기준점을 유지합니다.
   images:
     1:
-      name: health_empty
+      name: currency_silver
       x: 0
       y: 0
+      scale: 1.0
     2:
-      name: health_bar
-      x: 15
-      y: 4
+      name: currency_gold
+      x: 130
+      y: 0
+      scale: 1.0
     3:
-      name: armor_empty
-      x: 0
-      y: 15
-    4:
-      name: armor_bar
-      x: 15
-      y: 19
-  animations:
-    duration: 60
-    x-equation: 0
-    y-equation: 3cos(t/30 * pi)
-
-hunger:
-  images:
+      name: currency_kokonut
+      x: 260
+      y: 0
+      scale: 1.0
+  texts:
     1:
-      name: hunger_empty
-      x: 0
-      y: 0
-    2:
-      name: hunger_bar
-      x: 3
+      name: currency_font
+      pattern: "[currency_silver]"
+      placeholder-string-format:
+        number: "#,##0.##"
+      x: 24
       y: 4
+      scale: 0.75
+      color: "#303030"
+      outline: "80000000" # 반투명 검정 그림자(ARGB)
+      align: left
+    2:
+      name: currency_font
+      pattern: "[currency_gold]"
+      placeholder-string-format:
+        number: "#,###"
+      x: 154
+      y: 4
+      scale: 0.75
+      color: "#303030"
+      outline: "80000000"
+      align: left
     3:
-      name: air_empty
-      x: 0
-      y: 15
-    4:
-      name: air_bar
-      x: 3
-      y: 19
-  animations:
-    duration: 60
-    x-equation: 0
-    y-equation: 3cos(t/30 * pi)
+      name: currency_font
+      pattern: "[currency_kokonut]"
+      placeholder-string-format:
+        number: "#,###"
+      x: 284
+      y: 4
+      scale: 0.75
+      color: "#303030"
+      outline: "80000000"
+      align: left

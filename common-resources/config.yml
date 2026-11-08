@@ -9,7 +9,7 @@ bossbar-line: 1
 bossbar-resource-pack-line: 0
 merge-boss-bar: true
 disable-to-bedrock-player: true
-build-folder-location: "Kokonut_HUD/build"
+build-folder-location: "Nexo/pack/external_packs/Kokonut_HUD" # Nexo가 이 팩을 합쳐서 배포합니다.
 pack-type: zip #folder, zip, none
 enable-protection: false
 enable-self-host: false
@@ -19,7 +19,7 @@ self-host-port: 8163
 merge-other-folders: []
 loading-head: random #steve, alex, etc.
 default-hud:
-  - test_hud
+  - currency_hud
 default-popup: []
 default-compass: []
 load-minecraft-default-textures: false

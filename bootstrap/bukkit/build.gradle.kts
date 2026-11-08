@@ -12,6 +12,7 @@ dependencies {
  shade(project(":scheduler:standard")) { isTransitive = false }
  shade(project(":nms:v26_R2")) { isTransitive = false }
  shade(libs.kotlinStdlib)
+ compileOnly("kr.gomsv:Kokonut-Core:cbt-1.0")
 }
 
 bukkitPluginYaml {
@@ -25,69 +26,33 @@ bukkitPluginYaml {
     website = "https://wiki.egoverse.kr"
     depend = listOf("Kokonut-Core")
     permissions {
-        create("betterhud.help") {
-            description = "Accesses to help command."
+        fun op(name: String, text: String, children: Map<String, Boolean> = emptyMap()) = create(name) {
+            description = text
             default = Permission.Default.OP
+            this.children = children
         }
-        create("betterhud.reload") {
-            description = "Accesses to reload command."
-            default = Permission.Default.OP
-        }
-        create("betterhud.parse") {
-            description = "Accesses to parse command."
-            default = Permission.Default.OP
-        }
-        create("betterhud.hud") {
-            description = "Accesses to hud command."
-            default = Permission.Default.OP
-            children = mapOf(
-                "betterhud.hud.add" to true,
-                "betterhud.hud.remove" to true
-            )
-        }
-        create("betterhud.compass") {
-            description = "Accesses to compass command."
-            default = Permission.Default.OP
-            children = mapOf(
-                "betterhud.compass.add" to true,
-                "betterhud.compass.remove" to true
-            )
-        }
-        create("betterhud.turn") {
-            description = "Accesses to turn command."
-            default = Permission.Default.OP
-            children = mapOf(
-                "betterhud.turn.on" to true,
-                "betterhud.turn.off" to true,
-                "betterhud.turn.on.admin" to true,
-                "betterhud.turn.off.admin" to true
-            )
-        }
-        create("betterhud.pointer") {
-            description = "Accesses to pointer command."
-            default = Permission.Default.OP
-            children = mapOf(
-                "betterhud.pointer.set" to true,
-                "betterhud.pointer.clear" to true,
-                "betterhud.pointer.remove" to true
-            )
-        }
-        create("betterhud.popup") {
-            description = "Accesses to popup command."
-            default = Permission.Default.OP
-            children = mapOf(
-                "betterhud.popup.add" to true,
-                "betterhud.popup.remove" to true,
-                "betterhud.popup.show" to true,
-                "betterhud.popup.hide" to true
-            )
-        }
+        op("betterhud.help", "HUD 명령어 도움말")
+        op("betterhud.reload", "HUD 다시 불러오기")
+        op("betterhud.parse", "플레이스홀더 출력 확인")
+        op("betterhud.hud", "플레이어 HUD 추가·제거", mapOf("betterhud.hud.add" to true, "betterhud.hud.remove" to true))
+        op("betterhud.turn", "HUD 켜기·끄기", mapOf(
+            "betterhud.turn.on" to true, "betterhud.turn.off" to true,
+            "betterhud.turn.on.admin" to true, "betterhud.turn.off.admin" to true,
+        ))
     }
 }
 
 val shade = configurations.getByName("shade")
 val targetAttribute = manifestAttribute + mapOf("paperweight-mappings-namespace" to "mojang")
 val groupString = group.toString()
+
+val collectPluginArtifact = tasks.register<Copy>("collectPluginArtifact") {
+    val artifact = tasks.named<org.gradle.api.tasks.bundling.AbstractArchiveTask>("shadowJar")
+    dependsOn(artifact)
+    from(artifact.flatMap { it.archiveFile })
+    into(rootProject.layout.projectDirectory.dir("../plugin"))
+}
+tasks.named("shadowJar") { finalizedBy(collectPluginArtifact) }
 
 tasks {
     jar {

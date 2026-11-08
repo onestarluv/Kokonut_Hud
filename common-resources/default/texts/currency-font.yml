@@ -1,4 +1,5 @@
-entity_font:
+currency_font:
+  scale: 16
   merge-default-bitmap: true
   use-unifont: true
   include: []

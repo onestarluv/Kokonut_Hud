@@ -1,18 +1,10 @@
-test_hud:
+currency_hud:
   layouts:
     1:
-      name: health
+      name: currency_bar
       gui:
-        x: 35
-        y: 100
-      pixel:
         x: 0
-        y: -80
-    2:
-      name: hunger
-      gui:
-        x: 65
-        y: 100
+        y: 0
       pixel:
-        x: 0
-        y: -80
+        x: 4
+        y: 4

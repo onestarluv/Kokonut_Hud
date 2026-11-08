@@ -156,6 +156,7 @@ class BukkitBootstrapImpl : BukkitBootstrap, JavaPlugin() {
 
     override fun onDisable() {
         core.end()
+        kr.toxicity.hud.bootstrap.bukkit.module.kokonut.CurrencyBalanceCache.close()
         Bukkit.getScheduler().cancelTasks(this)
         log.info("Plugin disabled.")
     }
