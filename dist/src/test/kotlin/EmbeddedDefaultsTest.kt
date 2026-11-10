@@ -31,7 +31,7 @@ class EmbeddedDefaultsTest {
     }
 
     @Test fun currencyChipsKeepPixelArtSharp() {
-        // Pixel art only stays even at whole-number scales; the chips are drawn at their final size (20 px tall).
+        // Pixel art only stays even at whole-number scales; the chips are drawn at their final size (13 px tall, around the 9 px mini icon).
         // Silver balances run large, gold and kokonut stay within thousands, so silver gets the widest chip.
         val images = yaml("default/images/default-image.yml")
         val layout = yaml("default/layouts/default-layout.yml")["currency_bar"] as Map<*, *>
@@ -40,10 +40,39 @@ class EmbeddedDefaultsTest {
             assertEquals(1.0, (entry["scale"] as? Number)?.toDouble() ?: 1.0, "chip scale")
             val file = (images[entry["name"]] as Map<*, *>)["file"]
             val bitmap = javaClass.getResourceAsStream("/default/assets/$file")!!.use { ImageIO.read(it) }
-            assertEquals(20, bitmap.height)
+            assertEquals(13, bitmap.height)
             widths[entry["name"].toString()] = bitmap.width
         }
-        assertEquals(128, widths["currency_silver"]); assertEquals(56, widths["currency_gold"]); assertEquals(56, widths["currency_kokonut"])
+        assertEquals(77, widths["currency_silver"]); assertEquals(51, widths["currency_gold"]); assertEquals(51, widths["currency_kokonut"])
+    }
+
+    @Test fun locationBannerIsCentredAndSwitchesByLineCount() {
+        val images = yaml("default/images/default-image.yml")
+        val layouts = yaml("default/layouts/default-layout.yml")
+        val hud = yaml("default/huds/default-hud.yml")["location_hud"] as Map<*, *>
+        for (entry in (hud["layouts"] as Map<*, *>).values.map { it as Map<*, *> }) {
+            assertEquals(50, ((entry["gui"] as Map<*, *>)["x"] as Number).toInt(), "banner sits at the top centre")
+        }
+        for ((name, lines, height) in listOf(Triple("location_banner", "1", 20), Triple("location_banner_tall", "2", 34))) {
+            val layout = layouts[name] as Map<*, *>
+            assertEquals("center", layout["offset"]); assertEquals("center", layout["align"])
+            val condition = (layout["conditions"] as Map<*, *>).values.single() as Map<*, *>
+            assertEquals("location_lines", condition["first"]); assertEquals(lines, condition["second"])
+            val image = (layout["images"] as Map<*, *>).values.single() as Map<*, *>
+            val file = (images[image["name"]] as Map<*, *>)["file"]
+            val bitmap = javaClass.getResourceAsStream("/default/assets/$file")!!.use { ImageIO.read(it) }
+            assertEquals(176, bitmap.width); assertEquals(height, bitmap.height)
+            val texts = (layout["texts"] as Map<*, *>).values.map { it as Map<*, *> }
+            assertEquals(lines.toInt(), texts.size)
+            for (text in texts) {
+                assertTrue((text["y"] as Number).toInt() + 8 < height - 3, "text stays on the plate")
+                assertEquals("location_font", text["name"], "the currency font has no Hangul glyphs")
+            }
+        }
+        val font = yaml("default/texts/location-font.yml")["location_font"] as Map<*, *>
+        assertTrue("korean" in font["include"] as List<*>, "banner names are Korean")
+        assertTrue(javaClass.getResource("/default/fonts/${font["file"]}") != null, "Galmuri is bundled")
+        assertEquals(10, font["scale"], "Galmuri11 is only pixel-exact on its 10 px grid")
     }
 
     @Test fun currencyImagesDoNotOverlapAndBalancesMatchTheirIcons() {
@@ -63,7 +92,7 @@ class EmbeddedDefaultsTest {
             val bottom = top + bitmap.height * scale
             assertTrue(left > previousRight, "currency backgrounds must have a gap")
             assertEquals("[${image["name"]}]", text["pattern"], "balance must match the currency icon")
-            assertTrue((text["x"] as Number).toDouble() in (left + 20 * scale)..<right, "balance must start after the icon, inside its background")
+            assertTrue((text["x"] as Number).toDouble() in (left + 13 * scale)..<right, "balance must start after the icon, inside its background")
             assertTrue((text["y"] as Number).toDouble() in top..<bottom, "balance must be vertically inside its background")
             previousRight = right
         }

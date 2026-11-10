@@ -8,3 +8,15 @@ currency_hud:
       pixel:
         x: 4
         y: 4
+location_hud:
+  layouts:
+    1:
+      name: location_banner
+      gui:
+        x: 50
+        y: 12
+    2:
+      name: location_banner_tall
+      gui:
+        x: 50
+        y: 12

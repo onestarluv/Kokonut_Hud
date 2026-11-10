@@ -3,18 +3,19 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * Builds the currency HUD chips in the CoreUi book style (leather rim, parchment face) with the hand-drawn icons.
+ * Builds the currency HUD chips in the CoreUi book style (leather rim, parchment face) with the 9 x 9 mini icons.
  * Drawn at their final size (HUD scale 1.0) so every pixel stays square.
  *
  * java tools/HudChips.java art/icons common-resources/default/assets/currency
- * -> chip_silver.png (128 x 20), chip_gold.png, chip_kokonut.png (56 x 20)
+ * reads silver_mini.png, gold_mini.png, kokonut_mini.png
+ * -> chip_silver.png (77 x 13), chip_gold.png, chip_kokonut.png (51 x 13)
  *
- * Widths fit the expected balances at the HUD's 8 px digits (6 px per digit, 2 px per comma or point):
- * silver up to trillions (9,999,999,999,999.99: 15 digits + 5 marks, about 100 px), gold and kokonut up to 9,999.
+ * The chip is only as tall as the icon: 1 px outline + 1 px rim around a 9 px face. The balance (8 px font, 7 px ink)
+ * sits at y 3 so it is centred on the face, and starts at x 15 after the icon well and divider.
  */
 public class HudChips {
-    static final int H = 20;
-    static final java.util.Map<String, Integer> WIDTH = java.util.Map.of("silver", 128, "gold", 56, "kokonut", 56);
+    static final int ICON = 9, H = ICON + 4;
+    static final java.util.Map<String, Integer> WIDTH = java.util.Map.of("silver", 77, "gold", 51, "kokonut", 51);
     static final int OUTLINE = 0xFF1E0E06, RIM = 0xFF6B3A24, RIM_HI = 0xFF9A5A36, RIM_LO = 0xFF3E1E10,
             PAPER = 0xFFEADBB5, PAPER_SHADE = 0xFFCDB98A, PAPER_LIGHT = 0xFFF6ECD0, WELL = 0xFFD8C79C;
 
@@ -22,8 +23,8 @@ public class HudChips {
         File icons = new File(args[0]), out = new File(args[1]);
         out.mkdirs();
         for (String name : new String[]{"silver", "gold", "kokonut"}) {
-            BufferedImage icon = ImageIO.read(new File(icons, name + ".png"));
-            if (icon.getWidth() != 16 || icon.getHeight() != 16) throw new IllegalArgumentException(name + " must be 16x16");
+            BufferedImage icon = ImageIO.read(new File(icons, name + "_mini.png"));
+            if (icon.getWidth() != ICON || icon.getHeight() != ICON) throw new IllegalArgumentException(name + "_mini must be 9x9");
             ImageIO.write(chip(icon, WIDTH.get(name)), "png", new File(out, "chip_" + name + ".png"));
         }
         System.out.println("chips -> " + out);
@@ -42,11 +43,11 @@ public class HudChips {
         fill(img, 2, 2, W - 4, H - 4, PAPER);
         fill(img, 2, H - 3, W - 4, 1, PAPER_SHADE);
         // Icon well on the left, then a thin divider before the number.
-        fill(img, 2, 2, 16, 16, WELL);
-        fill(img, 18, 2, 1, H - 4, PAPER_SHADE);
-        fill(img, 19, 2, 1, H - 4, PAPER_LIGHT);
-        for (int y = 0; y < 16; y++)
-            for (int x = 0; x < 16; x++) {
+        fill(img, 2, 2, ICON, ICON, WELL);
+        fill(img, 2 + ICON, 2, 1, H - 4, PAPER_SHADE);
+        fill(img, 3 + ICON, 2, 1, H - 4, PAPER_LIGHT);
+        for (int y = 0; y < ICON; y++)
+            for (int x = 0; x < ICON; x++) {
                 int argb = icon.getRGB(x, y);
                 if ((argb >>> 24) != 0) img.setRGB(2 + x, 2 + y, argb);
             }

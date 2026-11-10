@@ -20,6 +20,7 @@ merge-other-folders: []
 loading-head: random #steve, alex, etc.
 default-hud:
   - currency_hud
+  - location_hud
 default-popup: []
 default-compass: []
 load-minecraft-default-textures: false

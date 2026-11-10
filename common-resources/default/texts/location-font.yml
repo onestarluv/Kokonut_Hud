@@ -1,0 +1,10 @@
+# 위치 배너 글꼴: 갈무리11(CoreUi 메뉴와 같은 글꼴, fonts/galmuri11.ttf). 한글 + 영문·숫자 모두 갈무리로 그립니다.
+# 갈무리11은 10px 격자의 픽셀 글꼴이라 scale 10으로 구워야 픽셀이 그대로 나옵니다(비트맵 칸 높이 14 = 10 * 1.4).
+# 레이아웃에서 scale 1.4로 그리면 글꼴 1픽셀 = GUI 1픽셀이 되어 배너 그림과 픽셀 크기가 같습니다.
+location_font:
+  file: galmuri11.ttf
+  scale: 10
+  merge-default-bitmap: false
+  use-unifont: false
+  include:
+    - korean

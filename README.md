@@ -5,9 +5,9 @@
 
 ## 표시 내용
 
-기본 HUD `currency_hud`가 화면 왼쪽 위에 **실버·골드·코코넛** 칩을 한 줄로 표시합니다. 칩은 CoreUi 메뉴(도감·메인 메뉴·우편함)와 같은 가죽 테두리·양피지 바탕이며 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 실버는 조 단위(9,999,999,999,999.99까지)를 위해 128×20, 골드·코코넛은 천 단위(9,999까지)라 56×20입니다. 칩 사이 여백은 4px, 숫자는 아이콘 칸 뒤 x+22부터 8px 크기의 `#3B2A1A` 글자로 표시합니다. 실버는 소수점 최대 두 자리 표시를 유지합니다.
+기본 HUD `currency_hud`가 화면 왼쪽 위에 **실버·골드·코코넛** 칩을 한 줄로 표시합니다. 칩은 CoreUi 메뉴(도감·메인 메뉴·우편함)와 같은 가죽 테두리·양피지 바탕이며 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 칩은 9px 미니 아이콘(`art/icons/*_mini.png`)에 맞춰 높이 13px이며, 폭은 실버 77×13(999,999.99까지), 골드·코코넛 51×13(9,999까지)입니다. 칩 사이 여백은 4px, 숫자는 아이콘 칸 뒤 x+15부터 8px 크기의 `#3B2A1A` 글자로 표시합니다. 실버는 소수점 최대 두 자리 표시를 유지합니다.
 
-- 아이콘 원본: `art/icons/{silver,gold,kokonut}.png`(16×16, Nexo 아이템 `icon_*`와 같은 그림)
+- 칩 아이콘 원본: `art/icons/{silver,gold,kokonut}_mini.png`(9×9, `D:\kokonut\resource`의 미니 아이콘). 16×16 원본 `art/icons/{silver,gold,kokonut}.png`는 Nexo 아이템 `icon_*`와 같은 그림
 - 칩 생성: `java tools/HudChips.java art/icons common-resources/default/assets/currency` → `chip_*.png`
 
 - 설정: `common-resources/config.yml`, HUD·레이아웃·이미지: `common-resources/default`
@@ -16,6 +16,21 @@
 - 플레이스홀더: `[currency_silver]`, `[currency_gold]`, `[currency_kokonut]`
   - 렌더링은 캐시만 읽고, 2초마다 별도 스레드에서 Core `CurrencyUtil`로 다시 조회합니다.
   - 잔액 변경은 최대 약 2초 뒤 반영되며, 첫 조회 전에는 0으로 표시합니다.
+
+### 위치 배너 (`location_hud`)
+
+화면 위쪽 가운데(gui x 50, y 12)에 리본 모양 배너를 4초 동안 표시합니다. 재화 칩과 같은 가죽 테두리·양피지 바탕에 금색 장식을 붙였습니다.
+
+- **영역**: Kokonut_Guard의 모든 영역은 들어설 때 이름을 한 줄 배너로 표시합니다(`__global__` 제외, 겹치면 우선순위가 가장 높은 영역). 어느 월드든 동작하며 야생 표시보다 우선합니다.
+  이름은 영역의 `kokonut-hud` 플래그 값이며, 플래그가 없으면 영역 ID를 그대로 씁니다. 값이 `none` 또는 `숨김`이면 그 영역은 표시하지 않습니다.
+  예: `/영역 플래그 market kokonut-hud 코코넛 항구 시장` (GUI 이름: `HUD 지역 이름`)
+- **야생**: 이름이 `wild`로 시작하는 월드에서는 바이옴을 제목으로, 플레이어가 들어가 있는(경계 상자 안) 구조물이 있으면 점선 아래 부제로 표시합니다.
+  바이옴·구조물이 1초 이상 유지될 때만 알리고(강을 건널 때 깜빡임 방지), 30초 안에 같은 장소로 돌아오면 다시 알리지 않습니다.
+- 소리: 배너가 뜰 때 본인에게만 `item.book.page_turn`(볼륨 0.6), 야생 구조물(두 줄 배너)은 `ui.cartography_table.take_result`를 재생합니다.
+- 글꼴: CoreUi 메뉴와 같은 갈무리11(`default/fonts/galmuri11.ttf`, `location_font`). 10px 격자 그대로(글꼴 1픽셀 = GUI 1픽셀) 그립니다.
+- 한국어 이름: `LocationNames.kt`. 목록에 없는 데이터팩 키는 경로를 띄어쓰기로 바꿔 표시합니다. 묻힌 보물·네더 화석은 표시하지 않습니다.
+- 플레이스홀더: `[location_title]`, `[location_subtitle]`, `[location_lines]`(0 숨김 · 1 한 줄 · 2 두 줄)
+- 배너 생성: `java tools/HudLocationBanner.java common-resources/default/assets/location` → `banner.png`(176×20), `banner_tall.png`(176×34)
 
 ## 명령어 (OP)
 
