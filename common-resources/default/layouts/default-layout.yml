@@ -1,7 +1,7 @@
 # 실버 · 골드 · 코코넛 칩을 화면 왼쪽 위에 한 줄로 표시합니다.
 # 칩은 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 9px 미니 아이콘에 맞춰 높이 13px, 실버 77x13(999,999.99까지),
 # 골드·코코넛 51x13(9,999까지). 칩 사이 여백 4px: 실버 0, 골드 81, 코코넛 136.
-# 숫자는 아이콘 칸(9px)과 구분선 뒤 x+15부터, 8px 글꼴(16 * 0.5)로 칩 안 세로 가운데(y 3)에 그립니다.
+# 숫자는 아이콘 칸 뒤 x+15부터 그립니다. 7px 숫자와 쉼표 꼬리는 칩의 y=3..10에 들어갑니다.
 # 글자색은 CoreUi 메뉴 본문과 같은 #3B2A1A, 그림자 없음.
 currency_bar:
   offset: left # 화면 왼쪽 위의 기존 기준점을 유지합니다.
@@ -29,7 +29,7 @@ currency_bar:
         number: "#,##0.##"
       x: 15
       y: 3
-      scale: 0.5
+      scale: 1.0
       color: "#3B2A1A"
       outline: false
       align: left
@@ -40,7 +40,7 @@ currency_bar:
         number: "#,###"
       x: 96
       y: 3
-      scale: 0.5
+      scale: 1.0
       color: "#3B2A1A"
       outline: false
       align: left
@@ -51,7 +51,7 @@ currency_bar:
         number: "#,###"
       x: 151
       y: 3
-      scale: 0.5
+      scale: 1.0
       color: "#3B2A1A"
       outline: false
       align: left

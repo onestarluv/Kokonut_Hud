@@ -5,10 +5,10 @@
 
 ## 표시 내용
 
-기본 HUD `currency_hud`가 화면 왼쪽 위에 **실버·골드·코코넛** 칩을 한 줄로 표시합니다. 칩은 CoreUi 메뉴(도감·메인 메뉴·우편함)와 같은 가죽 테두리·양피지 바탕이며 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 칩은 9px 미니 아이콘(`art/icons/*_mini.png`)에 맞춰 높이 13px이며, 폭은 실버 77×13(999,999.99까지), 골드·코코넛 51×13(9,999까지)입니다. 칩 사이 여백은 4px, 숫자는 아이콘 칸 뒤 x+15부터 8px 크기의 `#3B2A1A` 글자로 표시합니다. 실버는 소수점 최대 두 자리 표시를 유지합니다.
+기본 HUD `currency_hud`가 화면 왼쪽 위에 **실버·골드·코코넛** 칩을 한 줄로 표시합니다. 칩은 CoreUi 메뉴(도감·메인 메뉴·우편함)와 같은 가죽 테두리·양피지 바탕이며 원본 크기(scale 1.0)로 그려 픽셀이 고르게 보입니다. 칩은 9px 미니 아이콘(`art/icons/*_mini.png`)에 맞춰 높이 13px이며, 폭은 실버 77×13(999,999.99까지), 골드·코코넛 51×13(9,999까지)입니다. 칩 사이 여백은 4px이며, 숫자는 아이콘 칸 뒤 x+15부터 갈무리11에서 만든 7px 숫자로 `#3B2A1A` 색상으로 그립니다. 실버는 소수점 최대 두 자리 표시를 유지합니다.
 
 - 칩 아이콘 원본: `art/icons/{silver,gold,kokonut}_mini.png`(9×9, `D:\kokonut\resource`의 미니 아이콘). 16×16 원본 `art/icons/{silver,gold,kokonut}.png`는 Nexo 아이템 `icon_*`와 같은 그림
-- 칩 생성: `java tools/HudChips.java art/icons common-resources/default/assets/currency` → `chip_*.png`
+- 칩 생성: `java tools/HudChips.java art/icons common-resources/default/assets/currency common-resources/default/fonts/galmuri11.ttf` → `chip_*.png`, `balance.png`
 
 - 설정: `common-resources/config.yml`, HUD·레이아웃·이미지: `common-resources/default`
 - 잔액 글씨는 `outline: false`로 그림자를 끕니다.

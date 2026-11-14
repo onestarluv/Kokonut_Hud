@@ -1,5 +1,6 @@
 currency_font:
-  scale: 16
-  merge-default-bitmap: true
-  use-unifont: true
-  include: []
+  type: bitmap
+  chars:
+    balance:
+      file: currency/balance.png
+      codepoints: ["0123456789,.-"]

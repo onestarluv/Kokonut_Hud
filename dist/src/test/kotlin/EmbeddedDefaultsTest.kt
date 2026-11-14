@@ -28,6 +28,21 @@ class EmbeddedDefaultsTest {
         val patterns = (layout["texts"] as Map<*, *>).values.map { (it as Map<*, *>)["pattern"] }
         assertEquals(listOf("[currency_silver]", "[currency_gold]", "[currency_kokonut]"), patterns)
         for (entry in (layout["texts"] as Map<*, *>).values) assertTrue((entry as Map<*, *>)["name"] in fonts)
+
+        val font = fonts["currency_font"] as Map<*, *>
+        assertEquals("bitmap", font["type"])
+        val atlas = (font["chars"] as Map<*, *>)["balance"] as Map<*, *>
+        val glyphs = (atlas["codepoints"] as List<*>).single() as String
+        val bitmap = javaClass.getResourceAsStream("/default/assets/${atlas["file"]}")!!.use { ImageIO.read(it) }
+        assertEquals("0123456789,.-", glyphs)
+        assertEquals(8, bitmap.height)
+        val cellWidth = bitmap.width / glyphs.length
+        assertEquals(bitmap.width, cellWidth * glyphs.length)
+        for (index in glyphs.indices) {
+            assertTrue((0 until bitmap.height).any { row ->
+                (0 until cellWidth).any { column -> bitmap.getRGB(index * cellWidth + column, row) ushr 24 != 0 }
+            }, "missing glyph ${glyphs[index]}")
+        }
     }
 
     @Test fun currencyChipsKeepPixelArtSharp() {
@@ -93,7 +108,9 @@ class EmbeddedDefaultsTest {
             assertTrue(left > previousRight, "currency backgrounds must have a gap")
             assertEquals("[${image["name"]}]", text["pattern"], "balance must match the currency icon")
             assertTrue((text["x"] as Number).toDouble() in (left + 13 * scale)..<right, "balance must start after the icon, inside its background")
-            assertTrue((text["y"] as Number).toDouble() in top..<bottom, "balance must be vertically inside its background")
+            val textTop = (text["y"] as Number).toDouble()
+            assertEquals(1.0, (text["scale"] as Number).toDouble(), "balance bitmap scale")
+            assertTrue(textTop >= top + 2 && textTop + 8 <= bottom - 2, "balance fits inside the chip face")
             previousRight = right
         }
     }

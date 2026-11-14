@@ -1,4 +1,7 @@
 import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -6,12 +9,12 @@ import java.io.File;
  * Builds the currency HUD chips in the CoreUi book style (leather rim, parchment face) with the 9 x 9 mini icons.
  * Drawn at their final size (HUD scale 1.0) so every pixel stays square.
  *
- * java tools/HudChips.java art/icons common-resources/default/assets/currency
+ * java tools/HudChips.java art/icons common-resources/default/assets/currency common-resources/default/fonts/galmuri11.ttf
  * reads silver_mini.png, gold_mini.png, kokonut_mini.png
  * -> chip_silver.png (77 x 13), chip_gold.png, chip_kokonut.png (51 x 13)
  *
- * The chip is only as tall as the icon: 1 px outline + 1 px rim around a 9 px face. The balance (8 px font, 7 px ink)
- * sits at y 3 so it is centred on the face, and starts at x 15 after the icon well and divider.
+ * The chip has a 1 px outline and 1 px rim around a 9 px face. The Galmuri11 balance starts at x 15
+ * after the icon well and divider.
  */
 public class HudChips {
     static final int ICON = 9, H = ICON + 4;
@@ -27,7 +30,49 @@ public class HudChips {
             if (icon.getWidth() != ICON || icon.getHeight() != ICON) throw new IllegalArgumentException(name + "_mini must be 9x9");
             ImageIO.write(chip(icon, WIDTH.get(name)), "png", new File(out, "chip_" + name + ".png"));
         }
+        if (args.length > 2) {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(args[2])).deriveFont(10f);
+            ImageIO.write(balanceFont(font), "png", new File(out, "balance.png"));
+        }
         System.out.println("chips -> " + out);
+    }
+
+    static BufferedImage balanceFont(Font font) {
+        // Drop two repeated rows from the native 9px digits. Keep the baseline and the comma tail.
+        int[] rows = {1, 2, 4, 5, 6, 8, 9, 10};
+        String glyphs = "0123456789,.-";
+        int cellWidth = 6;
+        BufferedImage atlas = new BufferedImage(cellWidth * glyphs.length(), rows.length,
+                BufferedImage.TYPE_INT_ARGB);
+        FontRenderContext context = new FontRenderContext(null, true, true);
+        for (int i = 0; i < glyphs.length(); i++) {
+            char[] glyph = {glyphs.charAt(i)};
+            BufferedImage nativeGlyph = new BufferedImage(10, 14, BufferedImage.TYPE_INT_ARGB);
+            var graphics = nativeGlyph.createGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fill(font.createGlyphVector(context, glyph).getOutline(0, 10));
+            graphics.dispose();
+
+            int left = nativeGlyph.getWidth();
+            int right = -1;
+            for (int row : rows) {
+                for (int x = 0; x < nativeGlyph.getWidth(); x++) {
+                    if ((nativeGlyph.getRGB(x, row) >>> 24) != 0) {
+                        left = Math.min(left, x);
+                        right = Math.max(right, x);
+                    }
+                }
+            }
+            if (left > right || right - left >= cellWidth) {
+                throw new IllegalStateException("Unexpected glyph width: " + glyph[0]);
+            }
+            for (int y = 0; y < rows.length; y++) {
+                for (int x = left; x <= right; x++) {
+                    atlas.setRGB(i * cellWidth + x - left, y, nativeGlyph.getRGB(x, rows[y]));
+                }
+            }
+        }
+        return atlas;
     }
 
     static BufferedImage chip(BufferedImage icon, int W) {
