@@ -36,15 +36,24 @@ class LocationBannerTest {
         assertEquals(plains, banner.visible(11_500))
     }
 
-    @Test fun reenteringSoonIsNotAnnouncedAgain() {
+    @Test fun regionIsAnnouncedOnEveryEntry() {
         val banner = LocationBanner()
         banner.sample(market, 0)
         banner.sample(null, 5_000)
-        banner.sample(market, 10_000)
-        assertNull(banner.visible(10_000))
-        banner.sample(null, 20_000)
-        banner.sample(market, 31_000)
-        assertEquals(market, banner.visible(31_000))
+        assertEquals(market, banner.sample(market, 10_000))
+        assertEquals(market, banner.visible(10_000))
+    }
+
+    @Test fun reenteringWildPlaceSoonIsNotAnnouncedAgain() {
+        val banner = LocationBanner()
+        banner.sample(plains, 0)
+        banner.sample(market, 5_000)
+        banner.sample(plains, 10_000)
+        banner.sample(plains, 11_000)
+        assertNull(banner.sample(plains, 11_500))
+        banner.sample(market, 20_000)
+        banner.sample(plains, 31_000)
+        assertEquals(plains, banner.sample(plains, 32_000))
     }
 
     @Test fun sampleReportsTheMomentOfAnnouncementOnce() {

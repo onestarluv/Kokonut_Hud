@@ -9,7 +9,7 @@ data class Place(val title: String, val subtitle: String? = null, val region: Bo
  * 한 플레이어의 위치 배너 상태. 메인 스레드에서 [sample]로 갱신하고, HUD 렌더링 스레드는 [visible]만 읽는다.
  *
  * - 영역은 들어서는 즉시, 야생 바이옴·구조물은 [settleMillis] 동안 그대로일 때 알린다(강을 건널 때마다 깜빡이지 않도록).
- * - 알린 장소는 [repeatMillis] 안에 다시 들어와도 다시 알리지 않는다(경계를 오갈 때 반복 방지).
+ * - 영역은 들어설 때마다 알린다. 야생 바이옴·구조물은 [repeatMillis] 안에 다시 들어와도 다시 알리지 않는다(강·경계를 오갈 때 반복 방지).
  * - 배너는 [showMillis] 동안 보인다.
  */
 class LocationBanner(
@@ -40,7 +40,7 @@ class LocationBanner(
         current = place
         if (place == null) return null
         val last = announced[place]
-        if (last != null && now - last < repeatMillis) return null
+        if (!place.region && last != null && now - last < repeatMillis) return null
         announced.remove(place)
         announced[place] = now
         if (announced.size > 16) announced.entries.removeIf { now - it.value >= repeatMillis }
