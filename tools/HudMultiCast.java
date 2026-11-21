@@ -12,7 +12,7 @@ import java.io.File;
  * -> multicast_frame.png    (20 x 20): 1px 외곽 + 1px 가죽 테두리, 안쪽 16x16 아이콘 칸(x 2, y 2)
  *    multicast_cooldown.png (16 x 16): 쿨타임 어둡게 덮개. HUD가 아래부터 잘라(split UP) 남은 비율만큼 그린다.
  *    multicast_reserved.png (20 x 20): 예약됨 표시용 금색 테두리(틀 위에 겹침)
- *    multicast_time.png     : 남은 시간 글꼴(Galmuri11, "0123456789:", 높이 8px, 흰색)
+ *    multicast_time.png     : 남은 시간 글꼴(Galmuri11, "0123456789ms", 높이 8px, 흰색). 표기: 1분 이상 "13m", 미만 "23s"
  *    multicast_icon.png     (16 x 16): 스킬 아이콘. 파일이 이미 있으면 덮어쓰지 않는다(직접 그린 아이콘 보존). 없을 때만 임시 아이콘 생성.
  */
 public class HudMultiCast {
@@ -86,8 +86,8 @@ public class HudMultiCast {
     static BufferedImage timeFont(Font font) {
         // 재화 숫자(HudChips.balanceFont)와 같은 8줄: 9px 숫자에서 반복 줄 두 개를 뺀다.
         int[] rows = {1, 2, 4, 5, 6, 8, 9, 10};
-        String glyphs = "0123456789:";
-        int cellWidth = 6;
+        String glyphs = "0123456789ms";
+        int cellWidth = 8; // m 이 6px보다 넓다
         var atlas = new BufferedImage(cellWidth * glyphs.length(), rows.length, BufferedImage.TYPE_INT_ARGB);
         var context = new FontRenderContext(null, true, true);
         for (int i = 0; i < glyphs.length(); i++) {

@@ -1,7 +1,7 @@
-# 다중 투척 남은 쿨타임(m:ss). 생성: java tools/HudMultiCast.java (multicast_time.png)
+# 다중 투척 남은 쿨타임(1분 이상 "13m", 미만 "23s"). 생성: java tools/HudMultiCast.java (multicast_time.png)
 multicast_font:
   type: bitmap
   chars:
     time:
       file: fishing/multicast_time.png
-      codepoints: ["0123456789:"]
+      codepoints: ["0123456789ms"]

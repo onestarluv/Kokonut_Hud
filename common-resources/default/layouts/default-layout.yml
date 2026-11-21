@@ -132,7 +132,7 @@ fishing_aura_gauge:
       y: 16
       scale: 1.0
 # 다중 투척 스킬 칸: 다중 투척 낚싯대를 주 손에 들었을 때만([fishing_multicast_visible] == 1) 핫바 오른쪽에 표시합니다.
-# 틀 20x20 안에 16x16 아이콘(x 2, y 2). 쿨타임 중에는 남은 비율만큼 어둡게 덮고 남은 시간(m:ss)을 가운데에 씁니다. 예약되면 금색 테두리.
+# 틀 20x20 안에 16x16 아이콘(x 2, y 2). 쿨타임 중에는 남은 비율만큼 어둡게 덮고 남은 시간(13m · 23s)을 가운데에 씁니다. 예약되면 금색 테두리.
 # 영기 게이지(13px)가 보이면 그 오른쪽으로 비켜 섭니다(_shifted). 값은 Kokonut-Fishing이 0.25초마다 갱신합니다.
 fishing_multicast_skill:
   offset: left

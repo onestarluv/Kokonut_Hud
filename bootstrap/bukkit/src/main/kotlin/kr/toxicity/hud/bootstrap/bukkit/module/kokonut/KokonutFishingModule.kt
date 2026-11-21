@@ -19,7 +19,7 @@ import java.util.function.Function
  *
  * 다중 투척(`kokonut_fishing_multicast` = double[]{남은 초, 전체 초, 예약 1/0}, 다중 투척 낚싯대를 주 손에 들었을 때만):
  * [fishing_multicast_visible](0/1), [fishing_multicast_state](0 사용 가능, 1 쿨타임, 2 예약됨),
- * [fishing_multicast_cooldown](남은 초), [fishing_multicast_ratio](남은 비율 0~100), [fishing_multicast_time](m:ss, 쿨타임 아니면 빈 문자열).
+ * [fishing_multicast_cooldown](남은 초), [fishing_multicast_ratio](남은 비율 0~100), [fishing_multicast_time](1분 이상 "13m", 미만 "23s", 올림. 쿨타임 아니면 빈 문자열).
  *
  * 메타데이터는 메인 스레드에서 5틱마다 캐시로 옮기고, 렌더링은 캐시만 읽는다.
  */
@@ -30,7 +30,11 @@ class KokonutFishingModule : BukkitModule {
         "multicast_time" to HudPlaceholder.of { _, _ ->
             Function { player ->
                 val seconds = FishingMultiCastCache.get(player.uuid())?.remaining?.toLong() ?: 0L
-                if (seconds <= 0) "" else "${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}"
+                when {
+                    seconds <= 0 -> ""
+                    seconds >= 60 -> "${(seconds + 59) / 60}m"
+                    else -> "${seconds}s"
+                }
             }
         },
     )

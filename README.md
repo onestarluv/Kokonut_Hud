@@ -45,10 +45,10 @@
 
 다중 투척 인챈트 낚싯대를 **주 손**에 들었을 때만 핫바 오른쪽(gui x 50, y 100 / pixel x 95, y −21)에 20×20 스킬 칸을 표시합니다. 영기 게이지가 함께 보이면 게이지 오른쪽(pixel x 112)으로 비켜 섭니다.
 
-- 상태: 사용 가능(아이콘만) · 쿨타임(남은 비율만큼 아래부터 어둡게 덮고 가운데에 `m:ss`) · 예약됨(금색 테두리)
+- 상태: 사용 가능(아이콘만) · 쿨타임(남은 비율만큼 아래부터 어둡게 덮고 가운데에 `13m`(1분 이상) · `23s`(1분 미만)) · 예약됨(금색 테두리)
 - 아이콘: `common-resources/default/assets/fishing/multicast_icon.png`(16×16). 지금은 임시 그림이며, 직접 그린 그림으로 바꾼 뒤 다시 빌드합니다.
 - 값: Kokonut-Fishing이 메타데이터 `kokonut_fishing_multicast`(double[]{남은 초, 전체 초, 예약 1/0})에 넣고, `KokonutFishingModule`이 5틱마다 캐시로 옮깁니다.
-- 플레이스홀더: `[fishing_multicast_visible]`, `[fishing_multicast_state]`(0 사용 가능 · 1 쿨타임 · 2 예약됨), `[fishing_multicast_cooldown]`(남은 초), `[fishing_multicast_ratio]`(0~100), `[fishing_multicast_time]`(m:ss)
+- 플레이스홀더: `[fishing_multicast_visible]`, `[fishing_multicast_state]`(0 사용 가능 · 1 쿨타임 · 2 예약됨), `[fishing_multicast_cooldown]`(남은 초), `[fishing_multicast_ratio]`(0~100), `[fishing_multicast_time]`(13m · 23s)
 - 그림 생성: `java tools/HudMultiCast.java common-resources/default/assets/fishing common-resources/default/fonts/galmuri11.ttf` → 틀·덮개·예약 테두리·시간 글꼴(`multicast_font`). 아이콘이 이미 있으면 덮어쓰지 않습니다.
 - 기본 HUD 목록에 추가했습니다. 이미 접속 기록이 있는 플레이어에게 안 보이면 `/hud hud add all fishing_multicast_hud`.
 
