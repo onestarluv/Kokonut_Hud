@@ -21,6 +21,8 @@ loading-head: random #steve, alex, etc.
 default-hud:
   - currency_hud
   - location_hud
+  - fishing_aura_hud
+  - fishing_multicast_hud
 default-popup: []
 default-compass: []
 load-minecraft-default-textures: false

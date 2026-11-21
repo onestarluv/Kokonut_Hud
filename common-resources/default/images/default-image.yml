@@ -21,3 +21,47 @@ location_banner:
 location_banner_tall:
   type: single
   file: location/banner_tall.png
+
+# 영기 축적 세로 게이지(핫바 오른쪽). 생성: java tools/HudAuraGauge.java common-resources/default/assets/fishing
+fishing_aura_frame:
+  type: single
+  file: fishing/aura_frame.png
+
+# 채움: [fishing_aura](0~100)를 100으로 나눈 비율만큼 아래부터 위로 그린다. 33px 높이라 1px 단위로 33단계.
+fishing_aura_fill:
+  type: listener
+  file: fishing/aura_fill.png
+  split: 33
+  split-type: up
+  setting:
+    listener:
+      class: placeholder
+      value: fishing_aura
+      max: "100"
+
+# 다중 투척 스킬 칸(핫바 오른쪽, 영기 게이지 옆). 생성: java tools/HudMultiCast.java common-resources/default/assets/fishing common-resources/default/fonts/galmuri11.ttf
+# 아이콘(fishing/multicast_icon.png, 16x16)은 직접 그린 그림으로 바꿔 넣는다. 생성 도구는 이미 있는 아이콘을 덮어쓰지 않는다.
+fishing_multicast_frame:
+  type: single
+  file: fishing/multicast_frame.png
+
+fishing_multicast_icon:
+  type: single
+  file: fishing/multicast_icon.png
+
+# 쿨타임 덮개: [fishing_multicast_ratio](남은 비율 0~100)만큼 아래부터 위로 어둡게 덮는다. 16px 높이라 16단계.
+fishing_multicast_cooldown:
+  type: listener
+  file: fishing/multicast_cooldown.png
+  split: 16
+  split-type: up
+  setting:
+    listener:
+      class: placeholder
+      value: fishing_multicast_ratio
+      max: "100"
+
+# 예약됨: 금색 테두리를 틀 위에 겹친다.
+fishing_multicast_reserved:
+  type: single
+  file: fishing/multicast_reserved.png

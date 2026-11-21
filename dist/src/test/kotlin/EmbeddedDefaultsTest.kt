@@ -114,4 +114,43 @@ class EmbeddedDefaultsTest {
             previousRight = right
         }
     }
+
+    @Test fun fishingAuraGaugeFitsItsFrame() {
+        val images = yaml("default/images/default-image.yml")
+        val layout = yaml("default/layouts/default-layout.yml")["fishing_aura_gauge"] as Map<*, *>
+        val frame = (images["fishing_aura_frame"] as Map<*, *>)["file"]
+        val fill = images["fishing_aura_fill"] as Map<*, *>
+        assertEquals("listener", fill["type"])
+        val frameImage = javaClass.getResourceAsStream("/default/assets/$frame")!!.use { ImageIO.read(it) }
+        val fillImage = javaClass.getResourceAsStream("/default/assets/${fill["file"]}")!!.use { ImageIO.read(it) }
+        assertEquals(13, frameImage.width) // 세로 게이지: 재화 칩과 같은 13px 두께
+        assertEquals("up", fill["split-type"])
+        assertEquals(fillImage.height, fill["split"])
+        val fillEntry = (layout["images"] as Map<*, *>).values.map { it as Map<*, *> }.single { it["name"] == "fishing_aura_fill" }
+        val x = fillEntry["x"] as Int; val y = fillEntry["y"] as Int
+        assertTrue(x + fillImage.width <= frameImage.width - 2 && y + fillImage.height <= frameImage.height - 2, "fill inside the frame")
+        assertTrue("fishing_aura_hud" in yaml("default/huds/default-hud.yml"))
+    }
+
+    @Test fun fishingMultiCastSkillSlotFitsItsFrame() {
+        val images = yaml("default/images/default-image.yml")
+        fun image(name: String) = javaClass.getResourceAsStream("/default/assets/${(images[name] as Map<*, *>)["file"]}")!!.use { ImageIO.read(it) }
+        val frame = image("fishing_multicast_frame")
+        val icon = image("fishing_multicast_icon")
+        val cooldown = image("fishing_multicast_cooldown")
+        assertEquals(16, icon.width); assertEquals(16, icon.height) // 스킬 아이콘은 16x16
+        assertEquals(icon.width, cooldown.width); assertEquals(icon.height, cooldown.height)
+        assertEquals(frame.width, image("fishing_multicast_reserved").width)
+        val fill = images["fishing_multicast_cooldown"] as Map<*, *>
+        assertEquals("listener", fill["type"]); assertEquals(cooldown.height, fill["split"])
+        val layouts = yaml("default/layouts/default-layout.yml")
+        for (name in listOf("fishing_multicast_skill", "fishing_multicast_skill_shifted")) {
+            val entries = ((layouts[name] as Map<*, *>)["images"] as Map<*, *>).values.map { it as Map<*, *> }
+            val iconEntry = entries.single { it["name"] == "fishing_multicast_icon" }
+            val x = iconEntry["x"] as Int; val y = iconEntry["y"] as Int
+            assertTrue(x >= 2 && y >= 2 && x + icon.width <= frame.width - 2 && y + icon.height <= frame.height - 2, "icon inside the frame")
+        }
+        assertTrue("fishing_multicast_hud" in yaml("default/huds/default-hud.yml"))
+        assertTrue("multicast_font" in yaml("default/texts/multicast-font.yml"))
+    }
 }

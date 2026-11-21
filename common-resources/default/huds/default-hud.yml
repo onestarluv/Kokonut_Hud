@@ -20,3 +20,33 @@ location_hud:
       gui:
         x: 50
         y: 12
+# 핫바(가로 182px, 화면 아래 가운데) 오른쪽 끝에서 4px 띄우고, 게이지 아래 끝을 핫바 아래 끝(화면 바닥 1px 위)에 맞춥니다.
+fishing_aura_hud:
+  layouts:
+    1:
+      name: fishing_aura_gauge
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 95
+        y: -53
+# 다중 투척 스킬 칸: 핫바 오른쪽 끝에서 4px(영기 게이지가 있으면 게이지 오른쪽 4px), 아래 끝을 핫바 아래 끝에 맞춥니다.
+fishing_multicast_hud:
+  layouts:
+    1:
+      name: fishing_multicast_skill
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 95
+        y: -21
+    2:
+      name: fishing_multicast_skill_shifted
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 112
+        y: -21

@@ -111,3 +111,140 @@ location_banner_tall:
       scale: 1.4
       color: "#7A4E2D"
       outline: false
+# 영기 축적 게이지: 영기 축적 인챈트 낚싯대를 손에 들었을 때만([fishing_aura_visible] == 1) 핫바 오른쪽에 표시합니다.
+# 세로 틀 13x52(위 기포 아이콘 + 세로 홈), 채움 5x33을 홈 안쪽 x 4, y 16에 겹치고 아래에서 위로 찹니다. 값은 Kokonut-Fishing이 0.25초마다 갱신합니다.
+fishing_aura_gauge:
+  offset: left
+  conditions:
+    1:
+      first: fishing_aura_visible
+      second: "1"
+      operation: "=="
+  images:
+    1:
+      name: fishing_aura_frame
+      x: 0
+      y: 0
+      scale: 1.0
+    2:
+      name: fishing_aura_fill
+      x: 4
+      y: 16
+      scale: 1.0
+# 다중 투척 스킬 칸: 다중 투척 낚싯대를 주 손에 들었을 때만([fishing_multicast_visible] == 1) 핫바 오른쪽에 표시합니다.
+# 틀 20x20 안에 16x16 아이콘(x 2, y 2). 쿨타임 중에는 남은 비율만큼 어둡게 덮고 남은 시간(m:ss)을 가운데에 씁니다. 예약되면 금색 테두리.
+# 영기 게이지(13px)가 보이면 그 오른쪽으로 비켜 섭니다(_shifted). 값은 Kokonut-Fishing이 0.25초마다 갱신합니다.
+fishing_multicast_skill:
+  offset: left
+  conditions:
+    1:
+      first: fishing_multicast_visible
+      second: "1"
+      operation: "=="
+    2:
+      first: fishing_aura_visible
+      second: "0"
+      operation: "=="
+  images:
+    1:
+      name: fishing_multicast_frame
+      x: 0
+      y: 0
+      scale: 1.0
+    2:
+      name: fishing_multicast_icon
+      x: 2
+      y: 2
+      scale: 1.0
+    3:
+      name: fishing_multicast_cooldown
+      x: 2
+      y: 2
+      scale: 1.0
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "1"
+          operation: "=="
+    4:
+      name: fishing_multicast_reserved
+      x: 0
+      y: 0
+      scale: 1.0
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "2"
+          operation: "=="
+  texts:
+    1:
+      name: multicast_font
+      pattern: "[fishing_multicast_time]"
+      x: 10
+      y: 6
+      scale: 1.0
+      color: "#FFFFFF"
+      outline: true
+      align: center
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "1"
+          operation: "=="
+fishing_multicast_skill_shifted:
+  offset: left
+  conditions:
+    1:
+      first: fishing_multicast_visible
+      second: "1"
+      operation: "=="
+    2:
+      first: fishing_aura_visible
+      second: "1"
+      operation: "=="
+  images:
+    1:
+      name: fishing_multicast_frame
+      x: 0
+      y: 0
+      scale: 1.0
+    2:
+      name: fishing_multicast_icon
+      x: 2
+      y: 2
+      scale: 1.0
+    3:
+      name: fishing_multicast_cooldown
+      x: 2
+      y: 2
+      scale: 1.0
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "1"
+          operation: "=="
+    4:
+      name: fishing_multicast_reserved
+      x: 0
+      y: 0
+      scale: 1.0
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "2"
+          operation: "=="
+  texts:
+    1:
+      name: multicast_font
+      pattern: "[fishing_multicast_time]"
+      x: 10
+      y: 6
+      scale: 1.0
+      color: "#FFFFFF"
+      outline: true
+      align: center
+      conditions:
+        1:
+          first: fishing_multicast_state
+          second: "1"
+          operation: "=="

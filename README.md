@@ -32,6 +32,26 @@
 - 플레이스홀더: `[location_title]`, `[location_subtitle]`, `[location_lines]`(0 숨김 · 1 한 줄 · 2 두 줄)
 - 배너 생성: `java tools/HudLocationBanner.java common-resources/default/assets/location` → `banner.png`(176×20), `banner_tall.png`(176×34)
 
+### 영기 축적 게이지 (`fishing_aura_hud`)
+
+영기 축적 인챈트 낚싯대를 손에 들었을 때만 핫바 오른쪽(gui x 50, y 100 / pixel x 95, y −53)에 세로 게이지(13×52)를 표시합니다. 위쪽 기포 아이콘, 아래 홈이 아래에서 위로 찹니다(33단계, 25% 눈금).
+
+- 값: Kokonut-Fishing이 플레이어 메타데이터 `kokonut_fishing_aura`(0~100)에 넣고, `KokonutFishingModule`이 5틱마다 캐시로 옮깁니다.
+- 플레이스홀더: `[fishing_aura]`, `[fishing_aura_visible]`(1이면 표시)
+- 그림 생성: `java tools/HudAuraGauge.java common-resources/default/assets/fishing` → `aura_frame.png`, `aura_fill.png`
+- 기본 HUD 목록에 추가했습니다. 이미 접속 기록이 있는 플레이어에게 안 보이면 `/hud hud add all fishing_aura_hud`.
+
+### 다중 투척 스킬 칸 (`fishing_multicast_hud`)
+
+다중 투척 인챈트 낚싯대를 **주 손**에 들었을 때만 핫바 오른쪽(gui x 50, y 100 / pixel x 95, y −21)에 20×20 스킬 칸을 표시합니다. 영기 게이지가 함께 보이면 게이지 오른쪽(pixel x 112)으로 비켜 섭니다.
+
+- 상태: 사용 가능(아이콘만) · 쿨타임(남은 비율만큼 아래부터 어둡게 덮고 가운데에 `m:ss`) · 예약됨(금색 테두리)
+- 아이콘: `common-resources/default/assets/fishing/multicast_icon.png`(16×16). 지금은 임시 그림이며, 직접 그린 그림으로 바꾼 뒤 다시 빌드합니다.
+- 값: Kokonut-Fishing이 메타데이터 `kokonut_fishing_multicast`(double[]{남은 초, 전체 초, 예약 1/0})에 넣고, `KokonutFishingModule`이 5틱마다 캐시로 옮깁니다.
+- 플레이스홀더: `[fishing_multicast_visible]`, `[fishing_multicast_state]`(0 사용 가능 · 1 쿨타임 · 2 예약됨), `[fishing_multicast_cooldown]`(남은 초), `[fishing_multicast_ratio]`(0~100), `[fishing_multicast_time]`(m:ss)
+- 그림 생성: `java tools/HudMultiCast.java common-resources/default/assets/fishing common-resources/default/fonts/galmuri11.ttf` → 틀·덮개·예약 테두리·시간 글꼴(`multicast_font`). 아이콘이 이미 있으면 덮어쓰지 않습니다.
+- 기본 HUD 목록에 추가했습니다. 이미 접속 기록이 있는 플레이어에게 안 보이면 `/hud hud add all fishing_multicast_hud`.
+
 ## 명령어 (OP)
 
 | 명령어 | 설명 |
