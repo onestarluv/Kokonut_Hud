@@ -52,6 +52,17 @@
 - 그림 생성: `java tools/HudMultiCast.java common-resources/default/assets/fishing common-resources/default/fonts/galmuri11.ttf` → 틀·덮개·예약 테두리·시간 글꼴(`multicast_font`). 아이콘이 이미 있으면 덮어쓰지 않습니다.
 - 기본 HUD 목록에 추가했습니다. 이미 접속 기록이 있는 플레이어에게 안 보이면 `/hud hud add all fishing_multicast_hud`.
 
+### 쿨타임 각인 스킬 칸 (`enchant_skill_hud`)
+
+다중 투척 칸과 같은 모양(틀·쿨타임 덮개·시간 글꼴을 같이 씀)으로 Kokonut-Enchants 쿨타임 각인을 표시합니다.
+
+- 자르반: 자르반 창을 **주 손**에 들었을 때, 다중 투척 칸 자리(pixel x 95).
+- 도약: 도약 신발을 신었을 때. 주 손 스킬 칸(자르반·다중 투척)이 있으면 그 오른쪽(x 119), 영기 게이지 + 다중 투척이면 x 136.
+- 아이콘: `common-resources/default/assets/enchant/leap_icon.png`·`rush_icon.png`(16×16, 원본 `D:/kokonut/resource/leap.png`·`rush.png`)
+- 값: Kokonut-Enchants `effect/SkillHud`가 메타데이터 `kokonut_enchant_leap`·`kokonut_enchant_rush`(double[]{남은 초, 전체 초})에 0.25초마다 넣고, `KokonutEnchantModule`이 캐시로 옮깁니다.
+- 플레이스홀더: `[enchant_<leap|rush>_visible]`, `_state`(0 사용 가능 · 1 쿨타임), `_ratio`(0~100), `_time`(3s), `[enchant_leap_slot]`(0·1·2)
+- 기본 HUD 목록에 추가했습니다. 이미 접속 기록이 있는 플레이어에게 안 보이면 `/hud hud add all enchant_skill_hud`.
+
 ## 명령어 (OP)
 
 | 명령어 | 설명 |

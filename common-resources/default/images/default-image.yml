@@ -65,3 +65,35 @@ fishing_multicast_cooldown:
 fishing_multicast_reserved:
   type: single
   file: fishing/multicast_reserved.png
+
+# 쿨타임 각인 스킬 칸(도약·자르반). 틀·쿨타임 덮개는 다중 투척 칸 그림(fishing_multicast_frame·_cooldown)을 같이 쓴다.
+# 아이콘 16x16, 원본 D:/kokonut/resource/leap.png · rush.png
+enchant_leap_icon:
+  type: single
+  file: enchant/leap_icon.png
+
+enchant_rush_icon:
+  type: single
+  file: enchant/rush_icon.png
+
+enchant_leap_cooldown:
+  type: listener
+  file: fishing/multicast_cooldown.png
+  split: 16
+  split-type: up
+  setting:
+    listener:
+      class: placeholder
+      value: enchant_leap_ratio
+      max: "100"
+
+enchant_rush_cooldown:
+  type: listener
+  file: fishing/multicast_cooldown.png
+  split: 16
+  split-type: up
+  setting:
+    listener:
+      class: placeholder
+      value: enchant_rush_ratio
+      max: "100"

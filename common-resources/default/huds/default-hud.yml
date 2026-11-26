@@ -50,3 +50,38 @@ fishing_multicast_hud:
       pixel:
         x: 112
         y: -21
+# 쿨타임 각인 스킬 칸: 다중 투척 칸과 같은 줄. 도약은 앞 칸 오른쪽 4px(95 → 119, 영기 게이지 + 다중 투척이면 136).
+enchant_skill_hud:
+  layouts:
+    1:
+      name: enchant_rush_skill
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 95
+        y: -21
+    2:
+      name: enchant_leap_skill
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 95
+        y: -21
+    3:
+      name: enchant_leap_skill_after_hand
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 119
+        y: -21
+    4:
+      name: enchant_leap_skill_after_aura
+      gui:
+        x: 50
+        y: 100
+      pixel:
+        x: 136
+        y: -21

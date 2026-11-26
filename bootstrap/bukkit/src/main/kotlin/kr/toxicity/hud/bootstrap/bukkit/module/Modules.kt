@@ -4,6 +4,7 @@ import kr.toxicity.hud.bootstrap.bukkit.module.bukkit.BukkitEntityModule
 import kr.toxicity.hud.bootstrap.bukkit.module.bukkit.BukkitItemModule
 import kr.toxicity.hud.bootstrap.bukkit.module.bukkit.BukkitStandardModule
 import kr.toxicity.hud.bootstrap.bukkit.module.kokonut.KokonutCurrencyModule
+import kr.toxicity.hud.bootstrap.bukkit.module.kokonut.KokonutEnchantModule
 import kr.toxicity.hud.bootstrap.bukkit.module.kokonut.KokonutFishingModule
 import kr.toxicity.hud.bootstrap.bukkit.module.kokonut.KokonutLocationModule
 
@@ -22,6 +23,9 @@ val MODULE_BUKKIT = mapOf(
     },
     "fishing" to {
         KokonutFishingModule()
+    },
+    "enchant" to {
+        KokonutEnchantModule()
     },
     "item" to {
         BukkitItemModule()

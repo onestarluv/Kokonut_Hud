@@ -153,4 +153,20 @@ class EmbeddedDefaultsTest {
         assertTrue("fishing_multicast_hud" in yaml("default/huds/default-hud.yml"))
         assertTrue("multicast_font" in yaml("default/texts/multicast-font.yml"))
     }
+    @Test fun enchantSkillSlotsUseTheMultiCastFrame() {
+        val images = yaml("default/images/default-image.yml")
+        fun image(name: String) = javaClass.getResourceAsStream("/default/assets/${(images[name] as Map<*, *>)["file"]}")!!.use { ImageIO.read(it) }
+        for (skill in listOf("leap", "rush")) {
+            val icon = image("enchant_${skill}_icon")
+            assertEquals(16, icon.width); assertEquals(16, icon.height)
+            assertEquals("enchant_${skill}_ratio",
+                (((images["enchant_${skill}_cooldown"] as Map<*, *>)["setting"] as Map<*, *>)["listener"] as Map<*, *>)["value"])
+        }
+        val layouts = yaml("default/layouts/default-layout.yml")
+        for (name in listOf("enchant_rush_skill", "enchant_leap_skill", "enchant_leap_skill_after_hand", "enchant_leap_skill_after_aura")) {
+            assertTrue(name in layouts, name)
+        }
+        val hud = yaml("default/huds/default-hud.yml")["enchant_skill_hud"] as Map<*, *>
+        assertEquals(4, (hud["layouts"] as Map<*, *>).size)
+    }
 }
